@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb~
+
+# ML артефакты (модели тяжелые, их лучше не хранить в Git)
+models/
+
+# Данные (сырые датасеты обычно скачиваются по ссылке из README)
+data/raw/
+data/processed/
+
+# Окружение
+.env
+venv/
+env/
+myenv/
+
+# OS
+.DS_Store
+Thumbs.db
