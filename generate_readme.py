@@ -1,4 +1,17 @@
-# Spotify Genre Classifier
+import joblib
+import os
+
+def generate_readme():
+    try:
+        pipeline = joblib.load('models/genre_pipeline.pkl')
+        le = joblib.load('models/label_encoder.pkl')
+        model_name = type(pipeline.named_steps['model']).__name__
+        n_classes = len(le.classes_)
+    except FileNotFoundError:
+        model_name = "Tuned Model (Pipeline)"
+        n_classes = 10
+
+    readme_content = f"""# Spotify Genre Classifier
 
 [![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
 [![Streamlit](https://img.shields.io/badge/Streamlit-1.28+-red.svg)](https://streamlit.io/)
@@ -10,14 +23,14 @@
 - **Источник**: [Spotify Tracks Dataset (Kaggle)](https://www.kaggle.com/datasets/maharshipandya/-spotify-tracks-dataset)
 - **Объем**: ~114 000 треков, отфильтровано до топ-10 самых частых жанров.
 - **Признаки (11)**: danceability, energy, loudness, speechiness, acousticness, instrumentalness, liveness, valence, tempo, duration_ms, popularity.
-- **Целевая переменная**: track_genre (10 классов).
+- **Целевая переменная**: track_genre ({n_classes} классов).
 
 ## Как запустить проект
 
 ### 1. Локальный запуск (Исследование и обучение)
 1. Клонируй репозиторий: `git clone https://github.com/Uliana-int/spotify_genre_classifier.git`
 2. Перейди в папку: `cd spotify_genre_classifier`
-3. Создай окружение: `python -m venv venv` и активируй его (`source venv/bin/activate` или `venv\Scripts\activate` для Windows).
+3. Создай окружение: `python -m venv venv` и активируй его (`source venv/bin/activate` или `venv\\Scripts\\activate` для Windows).
 4. Установи зависимости: `pip install -r requirements.txt`
 5. Запусти Jupyter: `jupyter notebook`
 
@@ -31,7 +44,7 @@
 Откроется браузер с интерактивным предсказанием жанра по аудио-параметрам в реальном времени.
 
 ## Результаты и архитектура
-- **Лучшая модель**: RandomForestClassifier (с подобранными гиперпараметрами через GridSearchCV).
+- **Лучшая модель**: {model_name} (с подобранными гиперпараметрами через GridSearchCV).
 - **Пайплайн**: Данные проходят через StandardScaler и модель в едином sklearn.Pipeline. Это исключает data leakage и позволяет деплоить модель одним файлом.
 - **Дисбаланс**: Проведен анализ и сравнение подходов (Baseline vs SMOTE vs Class Weight).
 - **Интерпретируемость**: Использован SHAP (TreeExplainer) для объяснения глобальной важности признаков и локальных предсказаний.
@@ -50,3 +63,11 @@
 
 ---
 *Проект создан для демонстрации навыков End-to-End Machine Learning.*
+"""
+    
+    with open("README.md", "w", encoding="utf-8") as f:
+        f.write(readme_content)
+    print("README.md успешно сгенерирован!")
+
+if __name__ == "__main__":
+    generate_readme()
